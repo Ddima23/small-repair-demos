@@ -1,0 +1,184 @@
+{
+  "rows": [
+    [
+      "sku",
+      "product",
+      "category",
+      "stock_date",
+      "quantity"
+    ],
+    [
+      "SKU-001",
+      "Canvas pouch",
+      "Accessories",
+      "2026-10-01",
+      "12"
+    ],
+    [
+      "SKU-002",
+      "Ceramic cup",
+      "Home",
+      "2026-10-02",
+      "8"
+    ],
+    [
+      "SKU-003",
+      "Desk mat",
+      "Office",
+      "10/11/2026",
+      "5"
+    ],
+    [
+      "SKU-004",
+      "Notebook, A5",
+      "Stationery",
+      "2026-10-04",
+      ""
+    ],
+    [
+      "SKU-005",
+      "Travel mug",
+      "Home",
+      "2026-10-05",
+      "3"
+    ],
+    [
+      "SKU-005",
+      "Travel mug",
+      "Home",
+      "2026-10-05",
+      "4"
+    ],
+    [
+      "SKU-006",
+      "Pen set",
+      "Office",
+      "2026-10-06",
+      "0"
+    ]
+  ],
+  "sourceRows": [
+    2,
+    3,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "changes": [
+    {
+      "source_row": 2,
+      "field": "sku",
+      "rule": "trim",
+      "before": " SKU-001 ",
+      "after": "SKU-001"
+    },
+    {
+      "source_row": 2,
+      "field": "product",
+      "rule": "trim",
+      "before": " Canvas pouch ",
+      "after": "Canvas pouch"
+    },
+    {
+      "source_row": 2,
+      "field": "category",
+      "rule": "trim",
+      "before": "accessories ",
+      "after": "accessories"
+    },
+    {
+      "source_row": 2,
+      "field": "category",
+      "rule": "agreed category map",
+      "before": "accessories",
+      "after": "Accessories"
+    },
+    {
+      "source_row": 3,
+      "field": "product",
+      "rule": "trim",
+      "before": "Ceramic cup ",
+      "after": "Ceramic cup"
+    },
+    {
+      "source_row": 3,
+      "field": "category",
+      "rule": "agreed category map",
+      "before": "HOME",
+      "after": "Home"
+    },
+    {
+      "source_row": 4,
+      "field": "product",
+      "rule": "trim",
+      "before": "Ceramic cup ",
+      "after": "Ceramic cup"
+    },
+    {
+      "source_row": 4,
+      "field": "category",
+      "rule": "agreed category map",
+      "before": "HOME",
+      "after": "Home"
+    },
+    {
+      "source_row": 5,
+      "field": "category",
+      "rule": "agreed category map",
+      "before": "office",
+      "after": "Office"
+    }
+  ],
+  "removed": [
+    {
+      "source_row": 4,
+      "kept_source_row": 3,
+      "sku": "SKU-002",
+      "reason": "all normalized fields exactly equal"
+    }
+  ],
+  "issues": [
+    {
+      "source_row": 5,
+      "sku": "SKU-003",
+      "field": "stock_date",
+      "value": "10/11/2026",
+      "issue": "Ambiguous or invalid date",
+      "action": "Preserved text; confirm intended date"
+    },
+    {
+      "source_row": 6,
+      "sku": "SKU-004",
+      "field": "quantity",
+      "value": "",
+      "issue": "Missing value",
+      "action": "Preserved blank; client input needed"
+    },
+    {
+      "source_row": 7,
+      "sku": "SKU-005",
+      "field": "sku",
+      "value": "SKU-005",
+      "issue": "Conflicting rows share key",
+      "action": "All conflicting rows retained; client decision needed"
+    },
+    {
+      "source_row": 8,
+      "sku": "SKU-005",
+      "field": "sku",
+      "value": "SKU-005",
+      "issue": "Conflicting rows share key",
+      "action": "All conflicting rows retained; client decision needed"
+    }
+  ],
+  "stats": {
+    "inputRows": 8,
+    "outputRows": 7,
+    "duplicatesRemoved": 1,
+    "trimmedCells": 5,
+    "categoryChanges": 4,
+    "issues": 4
+  }
+}
