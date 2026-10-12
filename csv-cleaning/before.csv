@@ -1,0 +1,9 @@
+sku,product,category,stock_date,quantity
+ SKU-001 , Canvas pouch ,accessories ,2026-10-01,12
+SKU-002,Ceramic cup ,HOME,2026-10-02,8
+SKU-002,Ceramic cup ,HOME,2026-10-02,8
+SKU-003,Desk mat,office,10/11/2026,5
+SKU-004,"Notebook, A5",Stationery,2026-10-04,
+SKU-005,Travel mug,Home,2026-10-05,3
+SKU-005,Travel mug,Home,2026-10-05,4
+SKU-006,Pen set,Office,2026-10-06,0
