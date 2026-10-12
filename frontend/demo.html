@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Duplicate submission — illustrative frontend repair</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#0b1421;color:#eaf0f7;font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1050px;padding:58px 24px;margin:auto}.eyebrow{color:#78decd;letter-spacing:.1em;text-transform:uppercase;font-size:12px;font-weight:650}h1{font-size:clamp(32px,5vw,52px);line-height:1.13;letter-spacing:-.045em;margin:15px 0 20px}p{color:#b8c5d5;max-width:760px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:32px 0}.card{border:1px solid #2a3b50;background:#101e2e;border-radius:18px;padding:28px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center}.label{font-size:12px;font-weight:700;letter-spacing:.08em}.before .label{color:#ffb5a7}.after .label{color:#8ce6d6}.tag{font-size:11px;color:#aebbd0;border:1px solid #32465c;padding:3px 9px;border-radius:6px}.mock-field{margin:24px 0 14px;padding:14px;border:1px solid #33465c;border-radius:9px;color:#aebdd0;font-size:14px;background:#0b1523}button{width:100%;background:#7ce1cd;color:#0a2630;border:0;border-radius:9px;font:700 14px system-ui;padding:15px;cursor:pointer}button:hover{background:#a0ecdd}button:disabled{opacity:.55;cursor:wait}.count{font-size:52px;font-weight:700;letter-spacing:-.05em;line-height:1;margin-top:28px}.count-label{font-size:13px;color:#9eb0c6;margin-top:8px}.status{font-size:13px;min-height:42px;margin:16px 0 0}.note{padding:20px 24px;border-left:2px solid #72d5c1;background:#0e1b2a;border-radius:0 8px 8px 0;font-size:14px;color:#bdc9d8}code{color:#a6ebdb}footer{margin-top:32px;color:#8295ae;font-size:12px}@media(max-width:700px){.grid{grid-template-columns:1fr}.card{padding:23px}main{padding-top:30px}}
+  </style>
+</head>
+<body><main>
+  <div class="eyebrow">Small frontend repair / working example</div>
+  <h1>One click should mean<br>one submission.</h1>
+  <p>This synthetic example reproduces one JavaScript bug: rapid clicks start duplicate saves. The fixed version rejects extra submissions while the first is pending, and permits a retry after completion or failure.</p>
+  <div class="grid">
+    <section class="card before" aria-labelledby="before-title">
+      <div class="top"><span class="label" id="before-title">BEFORE</span><span class="tag">Missing guard</span></div>
+      <div class="mock-field">Demo value: example request</div>
+      <button id="before-run">Simulate 3 rapid clicks</button>
+      <div class="count" id="before-count" aria-live="polite">0</div><div class="count-label">mock saves started</div>
+      <p class="status" id="before-status" role="status">Ready. No real form or network call.</p>
+    </section>
+    <section class="card after" aria-labelledby="after-title">
+      <div class="top"><span class="label" id="after-title">AFTER</span><span class="tag">Pending guard</span></div>
+      <div class="mock-field">Demo value: example request</div>
+      <button id="after-run">Simulate 3 rapid clicks</button>
+      <div class="count" id="after-count" aria-live="polite">0</div><div class="count-label">mock saves started</div>
+      <p class="status" id="after-status" role="status">Ready. No real form or network call.</p>
+    </section>
+  </div>
+  <div class="note">Run the reproducible checks with <code>node --test submission.test.js</code>. They cover the original bug, duplicate prevention, the next intentional submission, and recovery after failed saves. This frontend guard is local to this page; server-side idempotency would be a separate concern.</div>
+  <footer>Illustrative demo • Created for this listing • AI-built<br>Mock data only. No client project, payment flow, external service, or production change.</footer>
+</main>
+<script src="submission.js"></script>
+<script>
+  function setupExample(prefix, createController) {
+    const button = document.getElementById(prefix + '-run');
+    const count = document.getElementById(prefix + '-count');
+    const status = document.getElementById(prefix + '-status');
+    let running = false;
+    button.addEventListener('click', async () => {
+      if (running) return;
+      running = true;
+      button.disabled = true;
+      let saves = 0;
+      count.textContent = '0';
+      const controller = createController(() => {
+        saves += 1;
+        count.textContent = String(saves);
+        return new Promise(resolve => setTimeout(() => resolve('mock saved'), 900));
+      });
+      status.textContent = 'Three click events fired; waiting for the mock save…';
+      await Promise.all([controller.submit('example'), controller.submit('example'), controller.submit('example')]);
+      status.textContent = prefix === 'before'
+        ? 'Bug reproduced: three duplicate saves from one rapid burst.'
+        : 'Fixed: one save; two duplicate submissions skipped.';
+      button.disabled = false;
+      running = false;
+    });
+  }
+  setupExample('before', SubmissionDemo.createBeforeController);
+  setupExample('after', SubmissionDemo.createFixedController);
+</script></body></html>
