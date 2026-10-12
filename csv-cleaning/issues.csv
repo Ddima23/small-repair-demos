@@ -1,0 +1,5 @@
+source_row,sku,field,value,issue,action
+5,SKU-003,stock_date,10/11/2026,Ambiguous or invalid date,Preserved text; confirm intended date
+6,SKU-004,quantity,,Missing value,Preserved blank; client input needed
+7,SKU-005,sku,SKU-005,Conflicting rows share key,All conflicting rows retained; client decision needed
+8,SKU-005,sku,SKU-005,Conflicting rows share key,All conflicting rows retained; client decision needed
