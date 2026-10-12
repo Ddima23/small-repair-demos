@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import {parseCsv,toCsv,clean,headers} from './clean.mjs';
+const raw=await fs.readFile(new URL('./before.csv',import.meta.url),'utf8');
+const input=parseCsv(raw); const result=clean(input);
+test('original matrix remains byte-equivalent as serialized JSON',()=>{const before=JSON.stringify(input); clean(input); assert.equal(JSON.stringify(input),before);});
+test('8 rows reconcile to 7 kept and 1 exact duplicate removed',()=>{assert.equal(result.stats.inputRows,8);assert.equal(result.stats.outputRows,7);assert.deepEqual(result.removed,[{source_row:4,kept_source_row:3,sku:'SKU-002',reason:'all normalized fields exactly equal'}]);});
+test('conflicting quantities stay in two records and are flagged',()=>{assert.deepEqual(result.rows.filter(r=>r[0]==='SKU-005').map(r=>r[4]),['3','4']);assert.equal(result.issues.filter(r=>r.issue==='Conflicting rows share key').length,2);});
+test('ambiguous date stays literal, missing quantity stays blank, zero stays zero',()=>{assert.equal(result.rows.find(r=>r[0]==='SKU-003')[3],'10/11/2026');assert.equal(result.rows.find(r=>r[0]==='SKU-004')[4],'');assert.equal(result.rows.find(r=>r[0]==='SKU-006')[4],'0');assert.equal(result.issues.length,4);});
+test('trim and exact mapping counts are traceable',()=>{assert.equal(result.stats.trimmedCells,5);assert.equal(result.stats.categoryChanges,4);assert.equal(result.rows[1][0],'SKU-001');assert.equal(result.rows[1][2],'Accessories');});
+test('quoted commas, quotes, linebreaks and empty trailing cells round-trip',()=>{const matrix=[['a','b'],['comma,here','quote"here'],['line\nnext','']];assert.deepEqual(parseCsv(toCsv(matrix)),matrix);});
+test('invalid dates flagged and distinct SKU lettercase is retained',()=>{const r=clean([headers,['Ab','X','Home','2026-02-30','0'],['ab','X','Home','2026-02-28','0']]);assert.equal(r.stats.outputRows,2);assert.equal(r.issues.length,1);assert.equal(r.rows[1][3],'2026-02-30');});
+test('prototype-named unknown categories stay literal and are flagged',()=>{const r=clean([headers,['A','X','constructor','2026-10-01','0'],['B','Y','__proto__','2026-10-01','0']]);assert.deepEqual(r.rows.slice(1).map(row=>row[2]),['constructor','__proto__']);assert.deepEqual(r.issues.map(issue=>[issue.field,issue.value,issue.issue]),[['category','constructor','Unmapped category'],['category','__proto__','Unmapped category']]);assert.equal(r.stats.categoryChanges,0);});
+test('cleaned data is idempotent under the same rules',()=>{const next=clean(result.rows);assert.deepEqual(next.rows,result.rows);assert.equal(next.changes.length,0);assert.equal(next.removed.length,0);assert.equal(next.issues.length,4);});
+test('malformed CSV and out-of-scope schema fail visibly',()=>{assert.throws(()=>parseCsv('a,b\n"broken,x'));assert.throws(()=>parseCsv('a,b\nx'));assert.throws(()=>clean([['other'],['x']]));});
