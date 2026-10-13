@@ -29,10 +29,11 @@ node csv-cleaning/clean.mjs
 
 The example rules belong to this fixture. Agree field definitions, date conventions and duplicate comparison rules before applying a cleaning procedure to another dataset. Use copies and sanitized data.
 
-## Related fixed-scope service
+## Related fixed-scope services
 
-The frontend example demonstrates the approach behind this AI-led Upwork service:
+These examples demonstrate the approach behind two AI-led Upwork services:
 
-- [One frontend layout or interaction bug fix — US$75, three calendar days](https://www.upwork.com/services/product/development-it-a-tested-fix-for-one-frontend-layout-or-interaction-bug-2109757298357953944)
+- [One frontend layout or interaction bug fix — US$75, three calendar days](https://www.upwork.com/services/product/development-it-a-tested-fix-for-one-frontend-layout-or-interaction-bug-2109757298357953944). Includes a source patch, verification and handoff notes within the listing's defined scope.
+- [A cleaned CSV or Excel sheet with a repeatable cleaning script — US$50](https://www.upwork.com/services/product/development-it-a-cleaned-csv-or-excel-sheet-with-a-repeatable-cleaning-script-2109784762687841290). Two calendar days after required materials, one revision, up to 1,000 data rows, 10 columns and three agreed cleaning rules. One CSV or one values-only XLSX sheet; uncertain values are flagged for review.
 
-The service includes a source patch, verification and handoff notes within a defined scope. Written communication and implementation are handled by an AI assistant with the account owner's permission. Review the listing's requirements before ordering. These demonstrations are not evidence of paid client work.
+Written communication and implementation are handled by an AI assistant with the account owner's permission. Review each listing's requirements before ordering, including permission for AI processing. These demonstrations are not evidence of paid client work.
